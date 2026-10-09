@@ -1,27 +1,38 @@
 import 'package:dio/dio.dart';
-import 'package:remote_portal/core/error/failure.dart';
 import 'package:remote_portal/features/characters/data/datasource/character_remote_datasource.dart';
-import 'package:remote_portal/features/characters/domain/entities/character.dart';
 import 'package:remote_portal/features/characters/domain/entities/charecters_page.dart';
-import 'package:remote_portal/features/characters/domain/repositories/character_repository.dart';
+
+import '../../../../core/error/failure.dart';
+import '../../domain/entities/character.dart';
+import '../../domain/repositories/character_repository.dart';
 
 class CharacterRepositoryImpl implements CharacterRepository {
-  final CharacterRemoteDatasource _remoteDatasource;
+  const CharacterRepositoryImpl(this._remoteDataSource);
 
-  CharacterRepositoryImpl(this._remoteDatasource);
+  final CharacterRemoteDatasource _remoteDataSource;
 
   @override
-  Future<CharactersPage> getCharacters({required int page}) {
-    return _guard(() async {
-      final model = await _remoteDatasource.getCharacters(page: page);
-      return model.toEntity();
-    });
+  Future<CharactersPage> getCharacters({
+    required int page,
+    String? name,
+  }) async {
+    try {
+      return await _guard(() async {
+        final model = await _remoteDataSource.getCharacters(
+          page: page,
+          name: name,
+        );
+        return model.toEntity();
+      });
+    } on NotFoundFailure {
+      return const CharactersPage(characters: [], hasNext: false);
+    }
   }
 
   @override
   Future<Character> getCharacter(int id) {
     return _guard(() async {
-      final model = await _remoteDatasource.getCharacter(id);
+      final model = await _remoteDataSource.getCharacter(id);
       return model.toEntity();
     });
   }
@@ -32,7 +43,7 @@ class CharacterRepositoryImpl implements CharacterRepository {
     } on DioException catch (e) {
       throw _mapDioException(e);
     } catch (_) {
-      throw const UnexpectedFailure('La respuesta del servidor no es válida');
+      throw const UnexpectedFailure('La respuesta del servidor no es válida.');
     }
   }
 

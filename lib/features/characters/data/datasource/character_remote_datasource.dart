@@ -7,10 +7,16 @@ class CharacterRemoteDatasource {
 
   CharacterRemoteDatasource(this._dio);
 
-  Future<CharactersPageModel> getCharacters({required int page}) async {
+  Future<CharactersPageModel> getCharacters({
+    required int page,
+    String? name,
+  }) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/character',
-      queryParameters: {'page': page},
+      queryParameters: {
+        'page': page,
+        if (name != null && name.isNotEmpty) 'name': name,
+      },
     );
     return CharactersPageModel.fromJson(response.data!);
   }

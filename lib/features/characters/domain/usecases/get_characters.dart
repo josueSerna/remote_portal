@@ -6,7 +6,7 @@ class GetCharacters {
 
   const GetCharacters(this._repository);
 
-  Future<CharactersPage> call({required int page}) {
-    return _repository.getCharacters(page: page);
+  Future<CharactersPage> call({required int page, String? name}) {
+    return _repository.getCharacters(page: page, name: name);
   }
 }
