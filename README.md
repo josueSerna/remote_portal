@@ -1,10 +1,11 @@
 # Rick and Morty App
 
-Aplicación en Flutter que consume la [API de Rick and Morty](https://rickandmortyapi.com) para mostrar los personajes de la serie y su información.
+Aplicación en Flutter que consume la [API de Rick and Morty](https://rickandmortyapi.com/documentation) para mostrar los personajes de la serie y su información.
 
 ## ¿Qué trae la app?
 
 ### Pantalla principal
+- **Barra de búsqueda** por nombre con debounce de 500 ms para no saturar la API. Si no hay resultados, se muestra un mensaje en lugar de un error.
 - Lista de personajes en formato **grid** (cuadrícula) con imagen, nombre, estado y especie.
 - **Scroll infinito**: al llegar al final se cargan automáticamente más personajes (la API entrega 20 por página).
 - **Pull to refresh**: desliza hacia abajo para recargar la lista.
